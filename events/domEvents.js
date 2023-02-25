@@ -6,6 +6,7 @@ import addBookForm from '../components/forms/addBookForm';
 import addAuthorForm from '../components/forms/addAuthorForm';
 import { getBookDetails, getAuthorDetails, deleteAuthorBooksRelationship } from '../api/mergedData';
 import viewBook from '../pages/viewBook';
+import viewAuthor from '../pages/viewAuthor';
 
 const domEvents = () => {
   document.querySelector('#main-container').addEventListener('click', (e) => {
@@ -65,9 +66,7 @@ const domEvents = () => {
     if (e.target.id.includes('view-author-btn')) {
       console.warn('VIEW AUTHOR');
       const [, firebaseKey] = e.target.id.split('--');
-      getAuthorDetails(firebaseKey).then((data) => {
-        console.warn(data);
-      });
+      getAuthorDetails(firebaseKey).then(viewAuthor);
     }
   });
 };
