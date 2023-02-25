@@ -31,7 +31,6 @@ const deleteBook = (firebaseKey) => new Promise((resolve, reject) => {
 
 // TODO: GET SINGLE BOOK
 const getSingleBook = (firebaseKey) => new Promise((resolve, reject) => {
-// need a way to get firebase key from book clicked?
   fetch(`${endpoint}/books/${firebaseKey}.json`, {
     method: 'GET',
     headers: {
