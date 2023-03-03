@@ -12,9 +12,9 @@ const getBookDetails = (firebaseKey) => new Promise((resolve, reject) => {
 // Create an object that has book data and an object named authorObject
 });
 
-const getAuthorDetails = (firebaseKey) => new Promise((resolve, reject) => {
+const getAuthorDetails = (firebaseKey, user) => new Promise((resolve, reject) => {
   getSingleAuthor(firebaseKey).then((authorObject) => {
-    getAuthorBooks(firebaseKey).then((booksArray) => resolve({ authorObject, booksArray }));
+    getAuthorBooks(user.uid, firebaseKey).then((booksArray) => resolve({ authorObject, booksArray }));
   })
     .catch(reject);
 });

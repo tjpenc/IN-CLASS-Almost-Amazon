@@ -40,6 +40,11 @@ const navigationEvents = (user) => {
 
     // WHEN THE USER PRESSES ENTER, MAKE THE API CALL AND CLEAR THE INPUT
     if (e.keyCode === 13) {
+      getBooks(user.uid).then((books) => {
+        const searchResult = books.filter((book) => book.title.toLowerCase().includes(searchValue)
+          || book.description.toLowerCase().includes(searchValue));
+        showBooks(searchResult);
+      });
       // MAKE A CALL TO THE API TO FILTER ON THE BOOKS
       // IF THE SEARCH DOESN'T RETURN ANYTHING, SHOW THE EMPTY STORE
       // OTHERWISE SHOW THE STORE
