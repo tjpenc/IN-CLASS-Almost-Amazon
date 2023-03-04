@@ -1,5 +1,9 @@
-import { getAuthors, getSingleAuthor } from '../api/authorData';
-import { getBooks, deleteBook, getSingleBook } from '../api/bookData';
+import {
+  getAuthors, getSingleAuthor, createAuthor, updateAuthor
+} from '../api/authorData';
+import {
+  getBooks, deleteBook, getSingleBook, createBook, updateBook
+} from '../api/bookData';
 import { showAuthors } from '../pages/authors';
 import { showBooks } from '../pages/books';
 import addBookForm from '../components/forms/addBookForm';
@@ -7,6 +11,8 @@ import addAuthorForm from '../components/forms/addAuthorForm';
 import { getBookDetails, getAuthorDetails, deleteAuthorBooksRelationship } from '../api/mergedData';
 import viewBook from '../pages/viewBook';
 import viewAuthor from '../pages/viewAuthor';
+import { getGoogleBooks, addGoogleBookToLibrary } from '../api/googleBooksAPI';
+import renderToDOM from '../utils/renderToDom';
 
 const domEvents = (user) => {
   document.querySelector('#main-container').addEventListener('click', (e) => {
@@ -67,6 +73,38 @@ const domEvents = (user) => {
       console.warn('VIEW AUTHOR');
       const [, firebaseKey] = e.target.id.split('--');
       getAuthorDetails(firebaseKey, user).then(viewAuthor);
+    }
+
+    if (e.target.id.includes('google-search-button')) {
+      const searchValue = document.querySelector('#google-search-value').value;
+      getGoogleBooks(searchValue).then((bookTitles) => {
+        renderToDOM('#store', bookTitles);
+      });
+    }
+
+    if (e.target.id.includes('add-google-book')) {
+      const [, googleId] = e.target.id.split('--');
+      let authorId = '';
+
+      addGoogleBookToLibrary(googleId, user).then((payloadObj) => {
+        createAuthor(payloadObj.authorPayload).then(({ name }) => {
+          const patchPayload = { firebaseKey: name };
+
+          updateAuthor(patchPayload).then(() => {
+            authorId = name;
+          });
+        });
+        createBook(payloadObj.bookPayload).then(({ name }) => {
+          const patchPayload = {
+            firebaseKey: name,
+            author_id: authorId
+          };
+
+          updateBook(patchPayload).then(() => {
+            getBooks(user.uid).then(showBooks);
+          });
+        });
+      });
     }
   });
 };

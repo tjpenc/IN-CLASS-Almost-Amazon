@@ -3,6 +3,7 @@ import { getBooks, booksOnSale } from '../api/bookData';
 import { showBooks } from '../pages/books';
 import { getAuthors, getFavoriteAuthors } from '../api/authorData';
 import { showAuthors } from '../pages/authors';
+import showGoogleForm from '../pages/googleBooks';
 
 // navigation events
 const navigationEvents = (user) => {
@@ -31,6 +32,12 @@ const navigationEvents = (user) => {
   // 3. If the array is empty because there are no authors, make sure to use the emptyAuthor function
   document.querySelector('#authors').addEventListener('click', () => {
     getAuthors(user.uid).then(showAuthors);
+  });
+
+  // Implement Google Books API
+  document.querySelector('#google-books').addEventListener('click', () => {
+    console.warn('ya clicked books');
+    showGoogleForm();
   });
 
   // STRETCH: SEARCH
